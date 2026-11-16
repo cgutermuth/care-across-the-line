@@ -96,14 +96,17 @@ def main():
     # population x additional nearest-clinic miles, May 2022 -> Jul 2026; reductions count as 0
     bc = c.dropna(subset=["drive_miles_change", "women_15_44"]).copy()
     bc["burden"] = bc.women_15_44 * bc.drive_miles_change.clip(lower=0)
+    bc["women_affected"] = bc.women_15_44.where(bc.drive_miles_change > 0, 0)
     bs = (bc.groupby("state_abbr", as_index=False)
-            .agg(burden=("burden", "sum"), counties_increase=("drive_miles_change", lambda x: int((x > 0).sum()))))
+            .agg(burden=("burden", "sum"), women_affected=("women_affected", "sum"),
+                 counties_increase=("drive_miles_change", lambda x: int((x > 0).sum()))))
+    bs["avg_added_miles"] = (bs.burden / bs.women_affected).where(bs.women_affected > 0, 0)
     bs["state"] = bs.state_abbr.map(names)
     total_burden = bs.burden.sum()
     bs["share_pct"] = bs.burden / total_burden * 100
     bs = bs.sort_values("burden", ascending=False).reset_index(drop=True)
     bs["rank"] = np.arange(1, len(bs) + 1)
-    bs[["rank", "state_abbr", "state", "burden", "share_pct", "counties_increase"]].to_csv(
+    bs[["rank", "state_abbr", "state", "burden", "share_pct", "women_affected", "avg_added_miles", "counties_increase"]].to_csv(
         OUT / "burden_by_state.csv", index=False, float_format="%.6f")
     top = bs.head(BURDEN_TOP_N)
     rest = bs.iloc[BURDEN_TOP_N:]
@@ -111,9 +114,11 @@ def main():
         top.assign(label=top.state, is_other=0, n_states=1),
         pd.DataFrame([dict(state_abbr="OTHER", state="Other states", label=f"Other {int((rest.burden > 0).sum())} states",
                            burden=rest.burden.sum(), share_pct=rest.share_pct.sum(), is_other=1,
-                           n_states=int((rest.burden > 0).sum()))])])
+                           n_states=int((rest.burden > 0).sum()),
+                           women_affected=rest.women_affected.sum(),
+                           avg_added_miles=rest.burden.sum() / rest.women_affected.sum())])])
     chart["highlight"] = chart.state_abbr.isin(["TX", "LA", "TN"]).astype(int)
-    chart[["state_abbr", "label", "burden", "share_pct", "is_other", "n_states", "highlight"]].to_csv(
+    chart[["state_abbr", "label", "burden", "share_pct", "women_affected", "avg_added_miles", "is_other", "n_states", "highlight"]].to_csv(
         OUT / "burden_chart.csv", index=False, float_format="%.6f")
     top3 = bs[bs.state_abbr.isin(["TX", "LA", "TN"])].share_pct.sum()
     signed = (bc.women_15_44 * bc.drive_miles_change)

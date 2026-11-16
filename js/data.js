@@ -23,8 +23,8 @@ function parser(numeric, file){
 }
 var SPECS={
   trend:   {url:"data/derived/trend_by_tier.csv", num:["policy_rank","mean_drive_miles_weighted","n_counties"]},
-  burden:  {url:"data/derived/burden_chart.csv", num:["burden","share_pct","is_other","n_states","highlight"]},
-  burdenAll:{url:"data/derived/burden_by_state.csv", num:["rank","burden","share_pct","counties_increase"]},
+  burden:  {url:"data/derived/burden_chart.csv", num:["burden","share_pct","women_affected","avg_added_miles","is_other","n_states","highlight"]},
+  burdenAll:{url:"data/derived/burden_by_state.csv", num:["rank","burden","share_pct","women_affected","avg_added_miles","counties_increase"]},
   counties:{url:"data/derived/counties_view.csv", num:["metro","rural_urban_code","women_15_44","policy_rank",
     "drive_miles_may2022","drive_miles_jul2026","drive_miles_change","obgyn","obgyn_per_10k_women",
     "ob_hospitals","dist_class","supply_class","inc100_no_obgyn"]},

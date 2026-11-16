@@ -117,6 +117,8 @@ print("— chart summaries")
 check("burden shares sum to 100% (all states)", np.isclose(bs.share_pct.sum(), 100))
 check("burden chart shares sum to 100% (top states + Other)", np.isclose(bch.share_pct.sum(), 100))
 check("'Other states' is last and flagged", bch.iloc[-1].is_other == 1 and bch.is_other.sum() == 1)
+check("women_affected x avg_added_miles = burden (every row, both tables)",
+      all(np.allclose(t.women_affected * t.avg_added_miles, t.burden, rtol=1e-6) for t in (bs, bch)))
 b = c.dropna(subset=["drive_miles_change", "women_15_44"])
 bb = (b.women_15_44 * b.drive_miles_change.clip(lower=0)).groupby(b.state_abbr).sum()
 check("TX+LA+TN share recomputed = 83.4%", round(bb[["TX", "LA", "TN"]].sum() / bb.sum() * 100, 1) == round(H["burden"]["top3_share_pct"], 1) == 83.4)
