@@ -118,9 +118,10 @@ laws changed.</p>
      For women seeking care, longer distances may also mean additional travel time and expense.</p>
   <figure id="fig-burden" aria-labelledby="t-burden">
     <h3 id="t-burden">Texas, Louisiana, and Tennessee account for <span data-h="burden_top3">83.4%</span> of the added population-weighted distance</h3>
-    <p class="fig-sub">Each state&rsquo;s share of the total increase in (women aged 15&ndash;44 &times; added miles to the nearest clinic), May 2022 &rarr; July 2026</p>
+    <p class="fig-sub">Width is the number of women aged 15&ndash;44 affected, height is the average added miles to the nearest clinic, and area is each state&rsquo;s share of the added burden, May 2022 &rarr; July 2026</p>
     <div class="status" id="st-burden" role="status"></div>
     <div id="burden" class="chart"></div>
+    <p class="howto"><b>How to read</b> Texas and Louisiana are nearly the same height, but Texas is about six times wider.</p>
     <details class="data about"><summary>About the data</summary>
       <p class="note"><b>Formula.</b> For each county: women aged 15&ndash;44 &times; max(miles in July 2026 &minus; miles in May 2022, 0).
         Shorter trips count as zero, never as credit. A state&rsquo;s share is its sum divided by the national sum. This is a
@@ -299,7 +300,7 @@ laws changed.</p>
 
 <script src="js/data.js"></script>
 <script src="js/distance-trend.js?v=13"></script>
-<script src="js/burden-bars.js"></script>
+<script src="js/burden-bars.js?v=14"></script>
 <script src="js/county-explorer.js?v=12"></script>
 <script src="js/rurality.js?v=13"></script>
 <script src="js/catchment-map.js?v=14"></script>
